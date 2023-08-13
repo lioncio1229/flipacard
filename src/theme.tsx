@@ -13,6 +13,7 @@ const theme = createTheme({
       dark: "#b95300",
     },
   },
+  spacing: [0, 2, 4, 8, 12, 14, 16, 32, 64],
 });
 
 export default theme;
