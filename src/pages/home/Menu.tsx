@@ -1,7 +1,7 @@
+import { useState, useEffect, useRef } from "react";
 import { Paper, Button, useTheme } from "@mui/material";
 import Flipable from "components/Flipable";
-
-import { useState } from "react";
+import { Link } from "react-router-dom";
 
 type MenuProps = {
   modes: string[];
@@ -25,6 +25,8 @@ function Menu({ modes, onClick }: MenuProps) {
       {modes.map((mode) => (
         <Button
           key={mode}
+          component={Link}
+          to="/iloveyou"
           onClick={() => onClick?.(mode)}
           sx={{
             bgcolor: "primary.light",
@@ -45,27 +47,38 @@ function Menu({ modes, onClick }: MenuProps) {
 }
 
 export default function FlipableMenu() {
-  const [flip, setFlip] = useState(false);
+  const [flip, setFlip] = useState<boolean>(false);
+  const flipableRef = useRef<HTMLElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    document.addEventListener("click", (e: MouseEvent) => {
+      e.stopPropagation();
+      if (e.target !== flipableRef.current && e.target !== buttonRef.current) {
+        setFlip(false);
+      }
+    });
+  });
 
   return (
     <Flipable
+      ref={flipableRef}
       front={
         <Button
+          ref={buttonRef}
           variant="contained"
           size="large"
           fullWidth
-          onClick={() => setFlip(!flip)}
-          sx={{ border: "1px solid white", mt: "8rem" }}
+          onClick={() => setFlip(true)}
+          sx={{
+            border: "1px solid white",
+            mt: "8rem",
+          }}
         >
           Play
         </Button>
       }
-      back={
-        <Menu
-          modes={["Easy", "Medium", "Hard", "Extreme"]}
-          onClick={() => setFlip(!flip)}
-        />
-      }
+      back={<Menu modes={["Easy", "Medium", "Hard", "Extreme"]} />}
       flip={flip}
       width={300}
       height={400}

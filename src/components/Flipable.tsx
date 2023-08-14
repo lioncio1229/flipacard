@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, forwardRef } from "react";
 import { Box, styled } from "@mui/material";
 import { CSSTransition } from "react-transition-group";
 
@@ -10,6 +10,8 @@ type FlipableProps = {
   width?: number | string;
   height?: number | string;
 };
+
+export type Ref = HTMLElement;
 
 const StyledBox = styled(Box)`
   transform-style: preserve-3d;
@@ -44,29 +46,26 @@ const Card = styled(Box)`
   align-items: start;
 `;
 
-export default function Flipable({
-  flip,
-  front,
-  back,
-  width = "8rem",
-  height = "8rem",
-  hideAt = 0,
-}: FlipableProps) {
-  const nodeRef = useRef<HTMLDivElement>(null);
+const Flipable = forwardRef<Ref, FlipableProps>(
+  ({ flip, front, back, width = "8rem", height = "8rem", hideAt = 0 }, ref) => {
+    const nodeRef = useRef<HTMLDivElement>(null);
 
-  return (
-    <Box width={width} height={height} sx={{ perspective: 800 }}>
-      <CSSTransition
-        in={flip}
-        nodeRef={nodeRef}
-        classNames="flip"
-        timeout={hideAt}
-      >
-        <StyledBox ref={nodeRef}>
-          <Card>{front}</Card>
-          <Card sx={{ transform: "rotateY(180deg)" }}>{back}</Card>
-        </StyledBox>
-      </CSSTransition>
-    </Box>
-  );
-}
+    return (
+      <Box ref={ref} width={width} height={height} sx={{ perspective: 800 }}>
+        <CSSTransition
+          in={flip}
+          nodeRef={nodeRef}
+          classNames="flip"
+          timeout={hideAt}
+        >
+          <StyledBox ref={nodeRef}>
+            <Card>{front}</Card>
+            <Card sx={{ transform: "rotateY(180deg)" }}>{back}</Card>
+          </StyledBox>
+        </CSSTransition>
+      </Box>
+    );
+  }
+);
+
+export default Flipable;
