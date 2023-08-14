@@ -2,7 +2,8 @@ import { Paper, Typography, useTheme } from "@mui/material";
 import { GitHub } from "@mui/icons-material";
 import FlexSpaceBetween from "components/FlexSpaceBetween";
 import FoodBg from "assets/foods-bg.jpg";
-import FlipableButton from "components/FlipableButton";
+import FlipableMenu from "./Menu";
+import FlexCenter from "components/FlexCenter";
 
 export default function Home() {
   const { spacing } = useTheme();
@@ -24,7 +25,9 @@ export default function Home() {
         </Typography>
         <GitHub color="primary" fontSize="large" />
       </FlexSpaceBetween>
-      <FlipableButton />
+      <FlexCenter sx={{ mt: "3.5rem" }}>
+        <FlipableMenu />
+      </FlexCenter>
       <Paper
         elevation={1}
         square

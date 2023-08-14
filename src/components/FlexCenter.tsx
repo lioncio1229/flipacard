@@ -6,12 +6,12 @@ type Props = {
   sx?: SxProps;
 };
 
-export default function FlexSpaceBetween({ children, sx = {} }: Props) {
+export default function FlexCenter({ children, sx = {} }: Props) {
   return (
     <Box
       sx={{
         display: "flex",
-        justifyContent: "space-between",
+        justifyContent: "center",
         alignItems: "center",
         ...sx,
       }}
