@@ -12,6 +12,7 @@ import Flipable from "components/Flipable";
 import { Link } from "react-router-dom";
 import icons from "components/Icons";
 import { CSSTransition } from "react-transition-group";
+import generateNotListed from "utils/generateNotListed";
 
 type MenuProps = {
   modes: string[];
@@ -127,10 +128,11 @@ export default function FlipableMenu() {
   };
 
   useEffect(() => {
+    //Generate multiple icons for first load
     const state: string[] = [];
 
     for (let i = 0; i < 10; i++) {
-      const icon = generateWhileNotInList(state);
+      const icon = generateNotListed(state, icons);
       state.push(icon);
     }
     setStickers(state);
@@ -139,7 +141,7 @@ export default function FlipableMenu() {
   useEffect(() => {
     //Generate new icon and add it as first position and remove the last icon
     const interval = setInterval(() => {
-      const newIcon = generateWhileNotInList(stickers);
+      const newIcon = generateNotListed(stickers, icons);
       const iconsCopy = [newIcon, ...stickers];
       iconsCopy.pop();
       setStickers(iconsCopy);
