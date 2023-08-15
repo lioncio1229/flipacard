@@ -116,17 +116,6 @@ export default function FlipableMenu() {
     return () => document.removeEventListener("click", handleClick);
   });
 
-  const generateWhileNotInList = (list: string[]) => {
-    let index = Math.abs(Math.round(Math.random() * (icons.length - 1)));
-    let icon: string = icons[index];
-
-    while (list.includes(icon)) {
-      index = Math.abs(Math.round(Math.random() * (icons.length - 1)));
-      icon = icons[index];
-    }
-    return icon;
-  };
-
   useEffect(() => {
     //Generate multiple icons for first load
     const state: string[] = [];
