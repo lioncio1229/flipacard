@@ -115,21 +115,31 @@ export default function FlipableMenu() {
     return () => document.removeEventListener("click", handleClick);
   });
 
+  const generateWhileNotInList = (list: string[]) => {
+    let index = Math.abs(Math.round(Math.random() * (icons.length - 1)));
+    let icon: string = icons[index];
+
+    while (list.includes(icon)) {
+      index = Math.abs(Math.round(Math.random() * (icons.length - 1)));
+      icon = icons[index];
+    }
+    return icon;
+  };
+
   useEffect(() => {
-    const state: string[] = Array(10)
-      .fill("")
-      .map((_) => {
-        const index = Math.abs(Math.round(Math.random() * (icons.length - 1)));
-        return icons[index];
-      });
+    const state: string[] = [];
+
+    for (let i = 0; i < 10; i++) {
+      const icon = generateWhileNotInList(state);
+      state.push(icon);
+    }
     setStickers(state);
   }, []);
 
   useEffect(() => {
     //Generate new icon and add it as first position and remove the last icon
     const interval = setInterval(() => {
-      const index = Math.abs(Math.round(Math.random() * (icons.length - 1)));
-      const newIcon = icons[index];
+      const newIcon = generateWhileNotInList(stickers);
       const iconsCopy = [newIcon, ...stickers];
       iconsCopy.pop();
       setStickers(iconsCopy);
