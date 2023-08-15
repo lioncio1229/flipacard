@@ -1,14 +1,24 @@
 import { useRef, useEffect, useState } from "react";
-import { Box, Avatar } from "@mui/material";
+import { Box, Avatar, keyframes } from "@mui/material";
 import generateNotListed from "utils/generateNotListed";
 import icons from "./icons";
 
 type Icons = {
   src: string;
-  top: string;
-  left: string;
-  size: string;
+  top: number;
+  left: number;
+  size: number;
+  animDelay: number;
 };
+
+const upAndDown = keyframes`
+    from{
+        transform: translate(0);
+    }
+    to{
+        transform: translateY(-40px);
+    }
+`;
 
 export default function RandomIcons() {
   const nodeRef = useRef<HTMLElement>(null);
@@ -25,13 +35,12 @@ export default function RandomIcons() {
     }
 
     const _pos: Icons[] = _icons.map((icon) => {
-      const top: string =
-        Math.round(Math.random() * current.clientHeight) + "px";
-      const left: string = Math.round(Math.random() * 100) + "vw";
+      const top: number = Math.round(Math.random() * current.clientHeight);
+      const left: number = Math.round(Math.random() * 100);
+      const size: number = Math.max(30, Math.round(Math.random() * 80));
+      const animDelay: number = Math.random() * 1.2;
 
-      const size: string = Math.max(40, Math.round(Math.random() * 100)) + "px";
-
-      return { src: icon, top, left, size };
+      return { src: icon, top, left, size, animDelay };
     });
 
     setPos(_pos);
@@ -55,10 +64,14 @@ export default function RandomIcons() {
           src={icon.src}
           sx={{
             position: "absolute",
-            top: icon.top,
-            left: icon.left,
+            top: icon.top + "px",
+            left: icon.left + "vw",
             width: icon.size,
             height: "auto",
+            animation: `${upAndDown} 3s ease-in-out ${icon.animDelay}s infinite alternate`,
+            filter: `blur(${(10 / icon.size) * 2}px) grayscale(${
+              (10 / icon.size) * 1.2
+            })`,
           }}
         />
       ))}
