@@ -10,9 +10,7 @@ import {
 } from "@mui/material";
 import Flipable from "components/Flipable";
 import { Link } from "react-router-dom";
-import Cat from "assets/icons/cat.svg";
-import Fries from "assets/icons/fries.svg";
-import Pancake from "assets/icons/pancake.svg";
+import icons from "components/Icons";
 import { CSSTransition } from "react-transition-group";
 
 type MenuProps = {
@@ -98,8 +96,6 @@ const StyledStackBottom = styled(Stack)`
   }
 `;
 
-const icons: string[] = [Cat, Fries, Pancake];
-
 export default function FlipableMenu() {
   const [flip, setFlip] = useState<boolean>(false);
   const [stickers, setStickers] = useState<string[]>([]);
@@ -129,6 +125,18 @@ export default function FlipableMenu() {
     setStickers(state);
   }, []);
 
+  useEffect(() => {
+    //Generate new icon and add it as first position and remove the last icon
+    const interval = setInterval(() => {
+      const index = Math.abs(Math.round(Math.random() * (icons.length - 1)));
+      const newIcon = icons[index];
+      const iconsCopy = [newIcon, ...stickers];
+      iconsCopy.pop();
+      setStickers(iconsCopy);
+    }, 1000);
+    return () => clearInterval(interval);
+  });
+
   return (
     <Box sx={{ position: "relative" }}>
       <CSSTransition
@@ -151,9 +159,12 @@ export default function FlipableMenu() {
         nodeRef={bottomRef}
       >
         <StyledStackBottom ref={bottomRef} gap="1.55rem" direction="row">
-          {stickers.slice(5, 10).map((sticker) => (
-            <Avatar src={sticker} variant="square" />
-          ))}
+          {stickers
+            .slice(5, 10)
+            .reverse()
+            .map((sticker) => (
+              <Avatar src={sticker} variant="square" />
+            ))}
         </StyledStackBottom>
       </CSSTransition>
 
