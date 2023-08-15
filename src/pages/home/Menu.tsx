@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import Flipable from "components/Flipable";
 import { Link } from "react-router-dom";
-import icons from "components/Icons";
+import icons from "components/icons";
 import { CSSTransition } from "react-transition-group";
 import generateNotListed from "utils/generateNotListed";
 

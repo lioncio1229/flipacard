@@ -13,7 +13,7 @@ import Ramen from "assets/icons/ramen.svg";
 import Shrimp from "assets/icons/shrimp.svg";
 import Sushi from "assets/icons/sushi.svg";
 
-export default [
+const icons: string[] = [
   Bacon,
   Bread,
   Burger,
@@ -29,3 +29,5 @@ export default [
   Shrimp,
   Sushi,
 ];
+
+export default icons;

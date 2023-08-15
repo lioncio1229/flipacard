@@ -4,6 +4,7 @@ import FlexSpaceBetween from "components/FlexSpaceBetween";
 import FoodBg from "assets/foods-bg.jpg";
 import FlipableMenu from "./Menu";
 import FlexCenter from "components/FlexCenter";
+import RandomIcons from "components/RandomIcons";
 
 export default function Home() {
   const { spacing } = useTheme();
@@ -25,6 +26,7 @@ export default function Home() {
         </Typography>
         <GitHub color="primary" fontSize="large" />
       </FlexSpaceBetween>
+      <RandomIcons />
       <FlexCenter sx={{ mt: "3.5rem" }}>
         <FlipableMenu />
       </FlexCenter>
