@@ -27,9 +27,11 @@ export default function RandomIcons() {
   useEffect(() => {
     const { current } = nodeRef;
     if (!current) return;
+
+    const iconCount: number = 10;
     const _icons: string[] = [];
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < iconCount; i++) {
       const icon = generateNotListed(_icons, icons);
       _icons.push(icon);
     }

@@ -2,7 +2,7 @@ import { Paper, Typography, useTheme } from "@mui/material";
 import { GitHub } from "@mui/icons-material";
 import FlexSpaceBetween from "components/FlexSpaceBetween";
 import FoodBg from "assets/foods-bg.jpg";
-import FlipableMenu from "./Menu";
+import FlipableMenu from "./FlipableMenu";
 import FlexCenter from "components/FlexCenter";
 import RandomIcons from "components/RandomIcons";
 

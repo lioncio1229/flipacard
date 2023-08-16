@@ -10,9 +10,10 @@ import {
 } from "@mui/material";
 import Flipable from "components/Flipable";
 import { Link } from "react-router-dom";
-import icons from "components/icons";
+import { default as sourceIcons } from "components/icons";
 import { CSSTransition } from "react-transition-group";
 import generateNotListed from "utils/generateNotListed";
+import { modes } from "config.json";
 
 type MenuProps = {
   modes: string[];
@@ -99,7 +100,7 @@ const StyledStackBottom = styled(Stack)`
 
 export default function FlipableMenu() {
   const [flip, setFlip] = useState<boolean>(false);
-  const [stickers, setStickers] = useState<string[]>([]);
+  const [icons, setIcons] = useState<string[]>([]);
   const topRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const flipableRef = useRef<HTMLElement>(null);
@@ -118,23 +119,25 @@ export default function FlipableMenu() {
 
   useEffect(() => {
     //Generate multiple icons for first load
+    const iconCount: number = 10;
     const state: string[] = [];
 
-    for (let i = 0; i < 10; i++) {
-      const icon = generateNotListed(state, icons);
+    for (let i = 0; i < iconCount; i++) {
+      const icon = generateNotListed(state, sourceIcons);
       state.push(icon);
     }
-    setStickers(state);
+    setIcons(state);
   }, []);
 
   useEffect(() => {
     //Generate new icon and add it as first position and remove the last icon
     const interval = setInterval(() => {
-      const newIcon = generateNotListed(stickers, icons);
-      const iconsCopy = [newIcon, ...stickers];
+      const newIcon = generateNotListed(icons, sourceIcons);
+      const iconsCopy = [newIcon, ...icons];
       iconsCopy.pop();
-      setStickers(iconsCopy);
+      setIcons(iconsCopy);
     }, 1000);
+
     return () => clearInterval(interval);
   });
 
@@ -147,7 +150,7 @@ export default function FlipableMenu() {
         nodeRef={topRef}
       >
         <StyledStack ref={topRef} gap="1.55rem" direction="row">
-          {stickers.slice(0, 5).map((sticker) => (
+          {icons.slice(0, 5).map((sticker) => (
             <Avatar src={sticker} variant="square" />
           ))}
         </StyledStack>
@@ -160,7 +163,7 @@ export default function FlipableMenu() {
         nodeRef={bottomRef}
       >
         <StyledStackBottom ref={bottomRef} gap="1.55rem" direction="row">
-          {stickers
+          {icons
             .slice(5, 10)
             .reverse()
             .map((sticker) => (
@@ -186,7 +189,7 @@ export default function FlipableMenu() {
             Play
           </Button>
         }
-        back={<Menu modes={["Easy", "Medium", "Hard", "Extreme"]} />}
+        back={<Menu modes={modes} />}
         flip={flip}
         width={300}
         height={320}
