@@ -6,9 +6,9 @@ import {
   Button,
   Paper,
   Typography,
-  Box,
 } from "@mui/material";
 import { Home, Replay } from "@mui/icons-material";
+import Game from "./game";
 import FlexSpaceBetween from "components/FlexSpaceBetween";
 import { useTheme } from "@mui/material";
 import FoodBg from "assets/foods-bg.jpg";
@@ -37,13 +37,26 @@ function StatusIndicator({ name, value }: { name: string; value: string }) {
 export default function Gameplay() {
   const theme = useTheme();
   const [params] = useSearchParams();
+  const mode = params.get("mode");
 
   return (
     <>
-      <AppBar color="transparent" elevation={0}>
+      <AppBar position="static" color="transparent" elevation={0}>
         <Container maxWidth="xl">
-          <Toolbar sx={{ justifyContent: "space-between" }}>
-            <FlexSpaceBetween sx={{ gap: theme.spacing(3) }}>
+          <Toolbar
+            sx={{
+              justifyContent: "space-between",
+              flexDirection: { xs: "column", sm: "column", md: "row" },
+              gap: "1rem",
+              mt: { xs: "1.5rem", md: 0 },
+              mb: { xs: "1.5rem", md: 0 },
+            }}
+          >
+            <FlexSpaceBetween
+              sx={{
+                gap: theme.spacing(3),
+              }}
+            >
               <Button
                 startIcon={<Home color="secondary" />}
                 variant="contained"
@@ -72,15 +85,15 @@ export default function Gameplay() {
               </Button>
             </FlexSpaceBetween>
             <FlexSpaceBetween sx={{ gap: theme.spacing(7) }}>
-              <StatusIndicator
-                name={`High Score (${params.get("mode")})`}
-                value="20"
-              />
+              <StatusIndicator name={`High Score (${mode})`} value="20" />
               <StatusIndicator name={"Remaining Cards"} value="20" />
             </FlexSpaceBetween>
           </Toolbar>
         </Container>
       </AppBar>
+
+      {mode && <Game mode={mode} />}
+
       <Paper
         elevation={1}
         square
