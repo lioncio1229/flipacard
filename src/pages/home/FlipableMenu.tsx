@@ -38,7 +38,7 @@ function Menu({ modes, onClick }: MenuProps) {
         <Button
           key={mode}
           component={Link}
-          to="/iloveyou"
+          to={`/gameplay?mode=${mode}`}
           onClick={() => onClick?.(mode)}
           sx={{
             bgcolor: "primary.light",
