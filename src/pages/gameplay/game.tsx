@@ -1,19 +1,36 @@
 import { useState, useEffect, useMemo } from "react";
-import { Box, Paper, Avatar } from "@mui/material";
+import { Box, Paper, Avatar, SxProps } from "@mui/material";
 import FlexCenter from "components/FlexCenter";
 import icons from "components/icons";
 import generateNotListed from "utils/generateNotListed";
 import shuffleArray from "utils/shuffleArray";
 import Flipable from "components/Flipable";
+import PancakeWhite from "assets/icons/pancake-white.svg";
 
 type GameProps = {
   mode: string;
 };
 
 type GridProps = {
-  name: string;
+  id: number,
+  path: string;
   isRevealed: boolean;
 };
+
+type CellProps = {
+  imagePath: string,
+  item: GridProps,
+  onClick: (item: GridProps) => void,
+  sx?: SxProps,
+}
+
+function Cell({sx, imagePath, item, onClick} : CellProps){
+  return (
+    <FlexCenter sx={{width: "100%", height: "100%", cursor: 'pointer', ...sx}} onClick={() => onClick(item)}>
+      <Avatar src={imagePath} sx={{width: "55%", height: "auto"}} />
+    </FlexCenter>
+  )
+}
 
 export default function Game({ mode }: GameProps) {
   const [grid, setGrid] = useState<GridProps[]>([]);
@@ -23,7 +40,7 @@ export default function Game({ mode }: GameProps) {
     let count = 0;
     switch (mode) {
       case "Easy":
-        count = 12;
+        count = 16;
         break;
       case "Medium":
         count = 25;
@@ -45,23 +62,21 @@ export default function Game({ mode }: GameProps) {
       const icon = generateNotListed(_icons, icons);
       _icons.push(icon);
     }
-    const remapped: GridProps[] = _icons.map((icon) => ({
-      name: icon,
+    const remapped: GridProps[] = _icons.map(icon => ({
+      id: -1,
+      path: icon,
       isRevealed: false,
     }));
 
-    const remappedCopy = [...remapped];
-    remapped.forEach((item) => {
-      remappedCopy.push(item);
-    });
+    let remappedCopy = [...remapped, ...remapped];
+    remappedCopy = remappedCopy.map((item, id) => ({...item, id}));
 
     setGrid(shuffleArray<GridProps>(remappedCopy));
   }, []);
 
   const itemClicked = (item: GridProps) => {
-    console.log("item: ", item);
     const gridCopy = grid.map((v) =>
-      v.name === item.name ? { ...item, isRevealed: true } : v
+      v.id === item.id ? { ...item, isRevealed: true } : v
     );
 
     setGrid(gridCopy);
@@ -81,13 +96,15 @@ export default function Game({ mode }: GameProps) {
           }}
         >
           {grid.map((item) => (
-            <Paper square sx={{ bgcolor: "secondary.main" }}>
+            <Paper>
               <Flipable
+                width="100%"
+                height="100%"
                 flip={item.isRevealed}
-                front={
-                  <Avatar onClick={() => itemClicked(item)} src={item.name} />
+                front={<Cell imagePath={PancakeWhite} item={item} onClick={itemClicked} sx={{bgcolor: "secondary.main"}}/>}
+                back={
+                  <Cell imagePath={item.path} item={item} onClick={itemClicked} sx={{bgcolor: "primary.main"}}/>
                 }
-                back={<Box bgcolor="white">Hello</Box>}
               />
             </Paper>
           ))}

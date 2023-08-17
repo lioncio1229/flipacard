@@ -1,22 +1,9 @@
-import { Box } from "@mui/material";
-import { SxProps } from "@mui/system";
+import { Box, styled } from "@mui/material";
 
-type Props = {
-  children?: string | JSX.Element | JSX.Element[];
-  sx?: SxProps;
-};
+const FlexCenter = styled(Box)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
-export default function FlexCenter({ children, sx = {} }: Props) {
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        ...sx,
-      }}
-    >
-      {children}
-    </Box>
-  );
-}
+export default FlexCenter;

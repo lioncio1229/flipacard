@@ -12,6 +12,14 @@ import Popcorn from "assets/icons/popcorn.svg";
 import Ramen from "assets/icons/ramen.svg";
 import Shrimp from "assets/icons/shrimp.svg";
 import Sushi from "assets/icons/sushi.svg";
+import Cake from "assets/icons/cake.svg";
+import Donat from "assets/icons/donat.svg";
+import Icecream from "assets/icons/icecream.svg";
+import Naruto from "assets/icons/naruto.svg";
+import Pie from "assets/icons/pie.svg";
+import Salad from "assets/icons/salad.svg";
+import Soup from "assets/icons/soup.svg";
+
 
 const icons: string[] = [
   Bacon,
@@ -28,6 +36,13 @@ const icons: string[] = [
   Ramen,
   Shrimp,
   Sushi,
+  Cake,
+  Donat,
+  Icecream,
+  Naruto,
+  Pie,
+  Salad,
+  Soup,
 ];
 
 export default icons;
