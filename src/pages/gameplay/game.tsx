@@ -160,7 +160,19 @@ export default function Game({ mode }: GameProps) {
                     imagePath={showcards ? item.path : PancakeWhite}
                     item={item}
                     onClick={itemClicked}
-                    sx={{ bgcolor: "secondary.main" }}
+                    sx={{
+                      bgcolor: "secondary.main",
+                      transition: "all 0.2s",
+
+                      "&:hover .MuiAvatar-root": {
+                        transition: "all 0.15s",
+                        width: "60%",
+                        height: "auto",
+                      },
+                      "&:hover": {
+                        bgcolor: "secondary.dark",
+                      },
+                    }}
                   />
                 }
                 back={

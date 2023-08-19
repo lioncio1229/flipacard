@@ -5,5 +5,5 @@
     { "name": "Hard", "rows": 5, "cols": 6 }
   ],
   "gameCardFlipspeed": 0.15,
-  "showcards": true
+  "showcards": false
 }
