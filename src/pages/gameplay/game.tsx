@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { Box, Paper, Avatar, SxProps } from "@mui/material";
 import FlexCenter from "components/FlexCenter";
 import icons from "components/icons";
@@ -12,29 +12,35 @@ type GameProps = {
 };
 
 type GridProps = {
-  id: number,
+  id: number;
   path: string;
   isRevealed: boolean;
+  isPaired: boolean;
 };
 
 type CellProps = {
-  imagePath: string,
-  item: GridProps,
-  onClick: (item: GridProps) => void,
-  sx?: SxProps,
-}
+  imagePath: string;
+  item: GridProps;
+  onClick: (item: GridProps) => void;
+  sx?: SxProps;
+};
 
-function Cell({sx, imagePath, item, onClick} : CellProps){
+function Cell({ sx, imagePath, item, onClick }: CellProps) {
   return (
-    <FlexCenter sx={{width: "100%", height: "100%", cursor: 'pointer', ...sx}} onClick={() => onClick(item)}>
-      <Avatar src={imagePath} sx={{width: "55%", height: "auto"}} />
+    <FlexCenter
+      sx={{ width: "100%", height: "100%", cursor: "pointer", ...sx }}
+      onClick={() => onClick(item)}
+    >
+      <Avatar src={imagePath} sx={{ width: "55%", height: "auto" }} />
     </FlexCenter>
-  )
+  );
 }
 
 export default function Game({ mode }: GameProps) {
   const [grid, setGrid] = useState<GridProps[]>([]);
   const area = useMemo(() => Math.round(Math.sqrt(grid.length)), [grid]);
+  const previousCard = useRef<GridProps | null>(null);
+  const previousTimeout = useRef<number>(-1);
 
   useEffect(() => {
     let count = 0;
@@ -62,24 +68,54 @@ export default function Game({ mode }: GameProps) {
       const icon = generateNotListed(_icons, icons);
       _icons.push(icon);
     }
-    const remapped: GridProps[] = _icons.map(icon => ({
+    const remapped: GridProps[] = _icons.map((icon) => ({
       id: -1,
       path: icon,
       isRevealed: false,
+      isPaired: false,
     }));
 
     let remappedCopy = [...remapped, ...remapped];
-    remappedCopy = remappedCopy.map((item, id) => ({...item, id}));
+    remappedCopy = remappedCopy.map((item, id) => ({ ...item, id }));
 
     setGrid(shuffleArray<GridProps>(remappedCopy));
   }, []);
 
-  const itemClicked = (item: GridProps) => {
-    const gridCopy = grid.map((v) =>
-      v.id === item.id ? { ...item, isRevealed: true } : v
+  const setGridRevealed = (id: number, isRevealed: boolean) => {
+    setGrid((grid) =>
+      grid.map((cell) => (cell.id === id ? { ...cell, isRevealed } : cell))
     );
+  };
 
-    setGrid(gridCopy);
+  const setPaired = (...ids: number[]) => {
+    setGrid((grid) =>
+      grid.map((cell) =>
+        ids.includes(cell.id) ? { ...cell, isPaired: true } : cell
+      )
+    );
+  };
+
+  const itemClicked = (item: GridProps) => {
+    if (item.isPaired) return;
+
+    const { current } = previousCard;
+    setGridRevealed(item.id, true);
+
+    if (current && current.path === item.path && current.isRevealed) {
+      if (previousTimeout.current) {
+        clearTimeout(previousTimeout.current);
+        setGridRevealed(current.id, true);
+      }
+      setPaired(current.id, item.id);
+      console.log("------Paired width ", current);
+      return;
+    }
+
+    previousCard.current = { ...item, isRevealed: true };
+    previousTimeout.current = setTimeout(() => {
+      previousCard.current = { ...item, isRevealed: false };
+      setGridRevealed(item.id, false);
+    }, 1000);
   };
 
   return (
@@ -98,12 +134,25 @@ export default function Game({ mode }: GameProps) {
           {grid.map((item) => (
             <Paper>
               <Flipable
+                flipSpeed={0.18}
                 width="100%"
                 height="100%"
                 flip={item.isRevealed}
-                front={<Cell imagePath={PancakeWhite} item={item} onClick={itemClicked} sx={{bgcolor: "secondary.main"}}/>}
+                front={
+                  <Cell
+                    imagePath={item.path}
+                    item={item}
+                    onClick={itemClicked}
+                    sx={{ bgcolor: "secondary.main" }}
+                  />
+                }
                 back={
-                  <Cell imagePath={item.path} item={item} onClick={itemClicked} sx={{bgcolor: "primary.main"}}/>
+                  <Cell
+                    imagePath={item.path}
+                    item={item}
+                    onClick={itemClicked}
+                    sx={{ bgcolor: "primary.main" }}
+                  />
                 }
               />
             </Paper>
