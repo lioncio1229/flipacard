@@ -56,7 +56,7 @@ export default function Gameplay() {
           >
             <FlexSpaceBetween
               sx={{
-                gap: theme.spacing(3),
+                gap: theme.spacing(2),
               }}
             >
               <Button

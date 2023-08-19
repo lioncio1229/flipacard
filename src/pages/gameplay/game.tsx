@@ -145,11 +145,11 @@ export default function Game({ mode }: GameProps) {
             gridTemplateRows: `repeat(${rows}, 1fr)`,
             width: { xs: "90vw", md: 480, xl: 700 },
             height: { xs: "90vw", md: 480, xl: 700 },
-            gap: "0.2rem",
+            gap: "0.3rem",
           }}
         >
           {grid.map((item) => (
-            <Paper key={item.id}>
+            <Paper key={item.id} elevation={3}>
               <Flipable
                 flipspeed={0.15}
                 width="100%"
@@ -180,7 +180,7 @@ export default function Game({ mode }: GameProps) {
                     imagePath={item.path}
                     item={item}
                     onClick={itemClicked}
-                    sx={{ bgcolor: "primary.main" }}
+                    sx={{ bgcolor: item.isPaired ? "primary.main" : "#fff" }}
                   />
                 }
               />
