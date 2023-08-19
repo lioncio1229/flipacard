@@ -9,12 +9,12 @@ type FlipableProps = {
   hideAt?: number;
   width?: number | string;
   height?: number | string;
-  flipSpeed?: number;
+  flipspeed?: number;
 };
 
 export type Ref = HTMLElement;
 
-const StyledBox = styled(Box)((props: { flipSpeed: number }) => ({
+const StyledBox = styled(Box)((props: { flipspeed: number }) => ({
   transformStyle: "preserve-3d",
   position: "relative",
   height: "100%",
@@ -25,14 +25,14 @@ const StyledBox = styled(Box)((props: { flipSpeed: number }) => ({
   },
   "&.flip-enter-done": {
     transform: "rotateY(180deg)",
-    transition: `transform ${props.flipSpeed}s linear`,
+    transition: `transform ${props.flipspeed}s linear`,
   },
   "&.flip-exit-active": {
     transform: "rotateY(180deg)",
   },
   "&.flip-exit-done": {
     transform: "rotateY(0deg)",
-    transition: `transform ${props.flipSpeed}s linear`,
+    transition: `transform ${props.flipspeed}s linear`,
   },
 }));
 
@@ -56,7 +56,7 @@ const Flipable = forwardRef<Ref, FlipableProps>(
       width = "8rem",
       height = "8rem",
       hideAt = 0,
-      flipSpeed = 0.3,
+      flipspeed = 0.3,
     },
     ref
   ) => {
@@ -70,7 +70,7 @@ const Flipable = forwardRef<Ref, FlipableProps>(
           classNames="flip"
           timeout={hideAt}
         >
-          <StyledBox ref={nodeRef} flipSpeed={flipSpeed}>
+          <StyledBox ref={nodeRef} flipspeed={flipspeed}>
             <Card>{front}</Card>
             <Card sx={{ transform: "rotateY(180deg)" }}>{back}</Card>
           </StyledBox>

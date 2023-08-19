@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Box, Paper, Avatar, SxProps } from "@mui/material";
 import FlexCenter from "components/FlexCenter";
 import icons from "components/icons";
@@ -6,9 +6,10 @@ import generateNotListed from "utils/generateNotListed";
 import shuffleArray from "utils/shuffleArray";
 import Flipable from "components/Flipable";
 import PancakeWhite from "assets/icons/pancake-white.svg";
+import { ModeProps } from "config/config";
 
 type GameProps = {
-  mode: string;
+  mode: ModeProps;
 };
 
 type GridProps = {
@@ -38,27 +39,12 @@ function Cell({ sx, imagePath, item, onClick }: CellProps) {
 
 export default function Game({ mode }: GameProps) {
   const [grid, setGrid] = useState<GridProps[]>([]);
-  const area = useMemo(() => Math.round(Math.sqrt(grid.length)), [grid]);
   const previousCard = useRef<GridProps | null>(null);
   const previousTimeout = useRef<number>(-1);
+  const { rows, cols } = mode;
 
   useEffect(() => {
-    let count = 0;
-    switch (mode) {
-      case "Easy":
-        count = 16;
-        break;
-      case "Medium":
-        count = 25;
-        break;
-      case "Hard":
-        count = 49;
-        break;
-      case "Extreme":
-        count = 64;
-        break;
-    }
-
+    const count = rows * cols;
     if (count > icons.length)
       throw new Error("Icons is not enough for the current mode");
 
@@ -81,10 +67,19 @@ export default function Game({ mode }: GameProps) {
     setGrid(shuffleArray<GridProps>(remappedCopy));
   }, []);
 
-  const setGridRevealed = (id: number, isRevealed: boolean) => {
-    setGrid((grid) =>
-      grid.map((cell) => (cell.id === id ? { ...cell, isRevealed } : cell))
-    );
+  const setGridRevealed = (
+    id: number,
+    isRevealed: boolean
+  ): GridProps | null => {
+    let modified = null;
+    setGrid((grid) => {
+      const _grid = grid.map((cell) =>
+        cell.id === id ? { ...cell, isRevealed } : cell
+      );
+      modified = _grid.find((v) => v.id === id);
+      return _grid;
+    });
+    return modified;
   };
 
   const setPaired = (...ids: number[]) => {
@@ -99,23 +94,34 @@ export default function Game({ mode }: GameProps) {
     if (item.isPaired) return;
 
     const { current } = previousCard;
-    setGridRevealed(item.id, true);
+    const newItem = setGridRevealed(item.id, true);
 
-    if (current && current.path === item.path && current.isRevealed) {
+    console.log("-----------------------------------");
+    console.log("item: ", newItem);
+    console.log("previous: ", current);
+
+    if (
+      current &&
+      newItem &&
+      current.path === newItem.path &&
+      current.id !== newItem.id
+    ) {
       if (previousTimeout.current) {
         clearTimeout(previousTimeout.current);
         setGridRevealed(current.id, true);
+        console.log("previoustimeout: ", previousTimeout.current);
+        console.log("cleared");
       }
-      setPaired(current.id, item.id);
+      setPaired(current.id, newItem.id);
       console.log("------Paired width ", current);
       return;
     }
 
-    previousCard.current = { ...item, isRevealed: true };
+    previousCard.current = newItem;
     previousTimeout.current = setTimeout(() => {
-      previousCard.current = { ...item, isRevealed: false };
       setGridRevealed(item.id, false);
-    }, 1000);
+      previousCard.current = null;
+    }, 1070);
   };
 
   return (
@@ -124,23 +130,23 @@ export default function Game({ mode }: GameProps) {
         <Box
           sx={{
             display: "grid",
-            gridTemplateColumns: `repeat(${area}, 1fr)`,
-            gridTemplateRows: `repeat(${area}, 1fr)`,
+            gridTemplateColumns: `repeat(${cols}, 1fr)`,
+            gridTemplateRows: `repeat(${rows}, 1fr)`,
             width: { xs: "90vw", md: 480, xl: 700 },
             height: { xs: "90vw", md: 480, xl: 700 },
             gap: "0.2rem",
           }}
         >
           {grid.map((item) => (
-            <Paper>
+            <Paper key={item.id}>
               <Flipable
-                flipSpeed={0.18}
+                flipspeed={0.15}
                 width="100%"
                 height="100%"
                 flip={item.isRevealed}
                 front={
                   <Cell
-                    imagePath={item.path}
+                    imagePath={PancakeWhite}
                     item={item}
                     onClick={itemClicked}
                     sx={{ bgcolor: "secondary.main" }}

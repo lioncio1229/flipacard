@@ -1,0 +1,8 @@
+{
+  "modes": [
+    { "name": "Easy", "rows": 4, "cols": 4 },
+    { "name": "Medium", "rows": 4, "cols": 5 },
+    { "name": "Hard", "rows": 5, "cols": 6 }
+  ],
+  "gameCardFlipspeed": 0.15
+}

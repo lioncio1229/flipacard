@@ -19,7 +19,18 @@ import Naruto from "assets/icons/naruto.svg";
 import Pie from "assets/icons/pie.svg";
 import Salad from "assets/icons/salad.svg";
 import Soup from "assets/icons/soup.svg";
-
+import ButterflyBiscuit from "assets/icons/butterflyBiscuit.svg";
+import Dango from "assets/icons/dango.svg";
+import Footlong from "assets/icons/footlong.svg";
+import Lollipop from "assets/icons/lollipop.svg";
+import Soap2 from "assets/icons/soap2.svg";
+import Spaghetti from "assets/icons/spaghetti.svg";
+import Sucker from "assets/icons/sucker.svg";
+import Grapes from "assets/icons/grapes.svg";
+import Candy from "assets/icons/candy.svg";
+import CakeSlice from "assets/icons/cakeSlice.svg";
+import Watermelon from "assets/icons/watermelon.svg";
+import Abocado from "assets/icons/abocado.svg";
 
 const icons: string[] = [
   Bacon,
@@ -43,6 +54,18 @@ const icons: string[] = [
   Pie,
   Salad,
   Soup,
+  ButterflyBiscuit,
+  Dango,
+  Footlong,
+  Lollipop,
+  Soap2,
+  Spaghetti,
+  Sucker,
+  Grapes,
+  Candy,
+  CakeSlice,
+  Watermelon,
+  Abocado,
 ];
 
 export default icons;

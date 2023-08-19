@@ -13,10 +13,11 @@ import { Link } from "react-router-dom";
 import { default as sourceIcons } from "components/icons";
 import { CSSTransition } from "react-transition-group";
 import generateNotListed from "utils/generateNotListed";
-import { modes } from "config.json";
+import { modes } from "config/config.json";
+import { ModeProps } from "config/config";
 
 type MenuProps = {
-  modes: string[];
+  modes: ModeProps[];
   onClick?: (mode: string) => void;
 };
 
@@ -36,10 +37,10 @@ function Menu({ modes, onClick }: MenuProps) {
     >
       {modes.map((mode) => (
         <Button
-          key={mode}
+          key={mode.name}
           component={Link}
-          to={`/gameplay?mode=${mode}`}
-          onClick={() => onClick?.(mode)}
+          to={`/gameplay?mode=${mode.name}`}
+          onClick={() => onClick?.(mode.name)}
           sx={{
             bgcolor: "primary.light",
             borderRadius: "2rem",
@@ -51,7 +52,7 @@ function Menu({ modes, onClick }: MenuProps) {
             textTransform: "capitalize",
           }}
         >
-          {mode}
+          {mode.name}
         </Button>
       ))}
     </Paper>
@@ -151,7 +152,7 @@ export default function FlipableMenu() {
       >
         <StyledStack ref={topRef} gap="1.55rem" direction="row">
           {icons.slice(0, 5).map((sticker) => (
-            <Avatar src={sticker} variant="square" />
+            <Avatar key={sticker} src={sticker} variant="square" />
           ))}
         </StyledStack>
       </CSSTransition>

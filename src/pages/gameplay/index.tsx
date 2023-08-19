@@ -12,6 +12,7 @@ import Game from "./game";
 import FlexSpaceBetween from "components/FlexSpaceBetween";
 import { useTheme } from "@mui/material";
 import FoodBg from "assets/foods-bg.jpg";
+import { modes } from "config/config.json";
 
 function StatusIndicator({ name, value }: { name: string; value: string }) {
   return (
@@ -37,7 +38,8 @@ function StatusIndicator({ name, value }: { name: string; value: string }) {
 export default function Gameplay() {
   const theme = useTheme();
   const [params] = useSearchParams();
-  const mode = params.get("mode");
+  const modeName = params.get("mode");
+  const mode = modes.find((mode) => mode.name === modeName);
 
   return (
     <>
