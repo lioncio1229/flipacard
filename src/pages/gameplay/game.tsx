@@ -40,8 +40,10 @@ function Cell({ sx, imagePath, item, onClick }: CellProps) {
 
 export default function Game({ mode }: GameProps) {
   const [grid, setGrid] = useState<GridProps[]>([]);
+  const currentCard = useRef<GridProps | null>(null);
   const previousCard = useRef<GridProps | null>(null);
   const previousTimeout = useRef<number>(-1);
+  const wrongMoveTimeout = useRef<number>(-1);
   const { rows, cols } = mode;
 
   useEffect(() => {
@@ -68,10 +70,7 @@ export default function Game({ mode }: GameProps) {
     setGrid(shuffleArray<GridProps>(remappedCopy));
   }, []);
 
-  const setGridRevealed = (
-    id: number,
-    isRevealed: boolean
-  ): GridProps | null => {
+  const revealCard = (id: number, isRevealed: boolean): GridProps | null => {
     let modified = null;
     setGrid((grid) => {
       const _grid = grid.map((cell) =>
@@ -93,36 +92,47 @@ export default function Game({ mode }: GameProps) {
 
   const itemClicked = (item: GridProps) => {
     if (item.isPaired) return;
+    let { current } = currentCard;
+    let { current: previous } = previousCard;
 
-    const { current } = previousCard;
-    const newItem = setGridRevealed(item.id, true);
+    if (current && previous) {
+      if (wrongMoveTimeout) clearTimeout(wrongMoveTimeout.current);
+      revealCard(current.id, false);
+      revealCard(previous.id, false);
+      currentCard.current = null;
+      previousCard.current = null;
+      current = null;
+      previous = null;
+    }
 
-    console.log("-----------------------------------");
-    console.log("item: ", newItem);
-    console.log("previous: ", current);
+    const _item = revealCard(item.id, true);
 
-    if (
-      current &&
-      newItem &&
-      current.path === newItem.path &&
-      current.id !== newItem.id
-    ) {
-      if (previousTimeout.current) {
-        clearTimeout(previousTimeout.current);
-        setGridRevealed(current.id, true);
-        console.log("previoustimeout: ", previousTimeout.current);
-        console.log("cleared");
+    if (previous && previous.isRevealed) {
+      currentCard.current = _item;
+
+      if (previousTimeout.current) clearTimeout(previousTimeout.current);
+
+      if (_item && previous.id !== _item.id && previous.path === _item.path) {
+        revealCard(previous.id, true);
+        setPaired(previous.id, _item.id);
+        previousCard.current = null;
+        currentCard.current = null;
+      } else {
+        wrongMoveTimeout.current = setTimeout(() => {
+          if (_item) revealCard(_item.id, false);
+          if (previous) revealCard(previous.id, false);
+          previousCard.current = null;
+          currentCard.current = null;
+        }, 350);
       }
-      setPaired(current.id, newItem.id);
-      console.log("------Paired width ", current);
       return;
     }
 
-    previousCard.current = newItem;
+    previousCard.current = _item;
     previousTimeout.current = setTimeout(() => {
-      setGridRevealed(item.id, false);
+      revealCard(item.id, false);
       previousCard.current = null;
-    }, 1070);
+    }, 700);
   };
 
   return (

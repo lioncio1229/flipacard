@@ -9,6 +9,7 @@ interface AppConfig {
     modes: ModeProps[],
     gameCardFlipspeed: number,
     showcards: boolean,
+    showLogs: boolean,
 }
 
 declare module 'config.json' {
