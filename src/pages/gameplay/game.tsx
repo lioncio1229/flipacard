@@ -92,35 +92,35 @@ export default function Game({ mode }: GameProps) {
 
   const itemClicked = (item: GridProps) => {
     if (item.isPaired) return;
-    let { current } = currentCard;
-    let { current: previous } = previousCard;
 
-    if (current && previous) {
+    if (currentCard.current && previousCard.current) {
       if (wrongMoveTimeout) clearTimeout(wrongMoveTimeout.current);
-      revealCard(current.id, false);
-      revealCard(previous.id, false);
+      revealCard(currentCard.current.id, false);
+      revealCard(previousCard.current.id, false);
       currentCard.current = null;
       previousCard.current = null;
-      current = null;
-      previous = null;
     }
 
+    const { current: previous } = previousCard;
     const _item = revealCard(item.id, true);
 
-    if (previous && previous.isRevealed) {
+    if (previous && previous.isRevealed && _item) {
       currentCard.current = _item;
 
       if (previousTimeout.current) clearTimeout(previousTimeout.current);
 
-      if (_item && previous.id !== _item.id && previous.path === _item.path) {
-        revealCard(previous.id, true);
-        setPaired(previous.id, _item.id);
+      const previousId = previous.id;
+      const currentId = _item.id;
+
+      if (previousId !== currentId && previous.path === _item.path) {
+        revealCard(previousId, true);
+        setPaired(previousId, currentId);
         previousCard.current = null;
         currentCard.current = null;
       } else {
         wrongMoveTimeout.current = setTimeout(() => {
-          if (_item) revealCard(_item.id, false);
-          if (previous) revealCard(previous.id, false);
+          revealCard(currentId, false);
+          revealCard(previousId, false);
           previousCard.current = null;
           currentCard.current = null;
         }, 350);
