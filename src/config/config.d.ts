@@ -8,6 +8,7 @@ export type ModeProps = {
 interface AppConfig {
     modes: ModeProps[],
     gameCardFlipspeed: number,
+    showcards: boolean,
 }
 
 declare module 'config.json' {

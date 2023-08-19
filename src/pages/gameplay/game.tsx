@@ -7,6 +7,7 @@ import shuffleArray from "utils/shuffleArray";
 import Flipable from "components/Flipable";
 import PancakeWhite from "assets/icons/pancake-white.svg";
 import { ModeProps } from "config/config";
+import { showcards } from "config/config.json";
 
 type GameProps = {
   mode: ModeProps;
@@ -146,7 +147,7 @@ export default function Game({ mode }: GameProps) {
                 flip={item.isRevealed}
                 front={
                   <Cell
-                    imagePath={PancakeWhite}
+                    imagePath={showcards ? item.path : PancakeWhite}
                     item={item}
                     onClick={itemClicked}
                     sx={{ bgcolor: "secondary.main" }}
