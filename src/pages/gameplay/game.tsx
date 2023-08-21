@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Box, Paper, Avatar, SxProps } from "@mui/material";
 import FlexCenter from "components/FlexCenter";
 import icons from "components/icons";
@@ -8,9 +8,11 @@ import Flipable from "components/Flipable";
 import PancakeWhite from "assets/icons/pancake-white.svg";
 import { ModeProps } from "config/config";
 import { showcards } from "config/config.json";
+import Timer from "components/Timer";
 
 type GameProps = {
   mode: ModeProps;
+  timeout: number;
 };
 
 type GridProps = {
@@ -38,8 +40,9 @@ function Cell({ sx, imagePath, item, onClick }: CellProps) {
   );
 }
 
-export default function Game({ mode }: GameProps) {
+export default function Game({ mode, timeout }: GameProps) {
   const [grid, setGrid] = useState<GridProps[]>([]);
+  const isWon = useRef<boolean>(false);
   const currentCard = useRef<GridProps | null>(null);
   const previousCard = useRef<GridProps | null>(null);
   const previousTimeout = useRef<number>(-1);
@@ -68,6 +71,20 @@ export default function Game({ mode }: GameProps) {
     remappedCopy = remappedCopy.map((item, id) => ({ ...item, id }));
 
     setGrid(shuffleArray<GridProps>(remappedCopy));
+  }, []);
+
+  useEffect(() => {
+    if (grid.length === 0) return;
+    const allPaired = grid.every((item) => item.isPaired === true);
+    if (allPaired) {
+      isWon.current = true;
+      console.log("You Won!");
+    }
+  }, [grid]);
+
+  const gameOver = useCallback(() => {
+    if (isWon.current) return;
+    console.log("Game Over!");
   }, []);
 
   const revealCard = (id: number, isRevealed: boolean): GridProps | null => {
@@ -137,7 +154,8 @@ export default function Game({ mode }: GameProps) {
 
   return (
     <>
-      <FlexCenter>
+      <Timer duration={timeout} onComplete={gameOver} />
+      <FlexCenter sx={{ mt: "1rem" }}>
         <Box
           sx={{
             display: "grid",

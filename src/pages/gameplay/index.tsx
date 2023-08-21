@@ -13,27 +13,8 @@ import FlexSpaceBetween from "components/FlexSpaceBetween";
 import { useTheme } from "@mui/material";
 import FoodBg from "assets/foods-bg.jpg";
 import { modes } from "config/config.json";
-
-function StatusIndicator({ name, value }: { name: string; value: string }) {
-  return (
-    <div>
-      <Typography
-        fontSize="1rem"
-        variant="caption"
-        color="secondary"
-        fontWeight={700}
-      >{`${name}:`}</Typography>
-      <Typography
-        fontSize="1rem"
-        variant="caption"
-        color="primary"
-        fontWeight={700}
-      >
-        {value}
-      </Typography>
-    </div>
-  );
-}
+import RandomIcons from "components/RandomIcons";
+import StatusIndicator from "components/StatusIndicator";
 
 export default function Gameplay() {
   const theme = useTheme();
@@ -46,6 +27,7 @@ export default function Gameplay() {
       <AppBar position="static" color="transparent" elevation={0}>
         <Container maxWidth="xl">
           <Toolbar
+            disableGutters
             sx={{
               justifyContent: "space-between",
               flexDirection: { xs: "column", sm: "column", md: "row" },
@@ -87,14 +69,16 @@ export default function Gameplay() {
               </Button>
             </FlexSpaceBetween>
             <FlexSpaceBetween sx={{ gap: theme.spacing(7) }}>
-              <StatusIndicator name={`High Score (${mode})`} value="20" />
-              <StatusIndicator name={"Remaining Cards"} value="20" />
+              <StatusIndicator name={`High Score (${mode?.name})`} value="20" />
             </FlexSpaceBetween>
           </Toolbar>
         </Container>
       </AppBar>
 
-      {mode && <Game mode={mode} />}
+      {/* <RandomIcons /> */}
+      <Container maxWidth="xl">
+        {mode && <Game mode={mode} timeout={20 * 1000} />}
+      </Container>
 
       <Paper
         elevation={1}
