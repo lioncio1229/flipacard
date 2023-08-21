@@ -1,4 +1,5 @@
 import { useSearchParams } from "react-router-dom";
+import { useState } from "react";
 import {
   AppBar,
   Container,
@@ -8,19 +9,29 @@ import {
   Typography,
 } from "@mui/material";
 import { Home, Replay } from "@mui/icons-material";
-import Game from "./game";
+import Game from "./Game";
 import FlexSpaceBetween from "components/FlexSpaceBetween";
 import { useTheme } from "@mui/material";
 import FoodBg from "assets/foods-bg.jpg";
 import { modes } from "config/config.json";
 import RandomIcons from "components/RandomIcons";
 import StatusIndicator from "components/StatusIndicator";
+import GameOver from "./GameOver";
+
+type GameOverInfoProps = { isWinner: boolean; timeRemaining: number };
 
 export default function Gameplay() {
   const theme = useTheme();
   const [params] = useSearchParams();
   const modeName = params.get("mode");
   const mode = modes.find((mode) => mode.name === modeName);
+  const [gameOverInfo, setGameOverInfo] = useState<GameOverInfoProps | null>(
+    null
+  );
+
+  const handleGameOver = (isWinner: boolean, timeRemaining: number) => {
+    setGameOverInfo({ isWinner, timeRemaining });
+  };
 
   return (
     <>
@@ -74,10 +85,13 @@ export default function Gameplay() {
           </Toolbar>
         </Container>
       </AppBar>
+      {gameOverInfo && <GameOver isWinner={gameOverInfo.isWinner} />}
+      {!gameOverInfo && <RandomIcons />}
 
-      {/* <RandomIcons /> */}
       <Container maxWidth="xl">
-        {mode && <Game mode={mode} timeout={20 * 1000} />}
+        {mode && (
+          <Game mode={mode} timeout={60 * 1000} onGameOver={handleGameOver} />
+        )}
       </Container>
 
       <Paper

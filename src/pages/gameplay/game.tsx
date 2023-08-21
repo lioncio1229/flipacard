@@ -9,10 +9,12 @@ import PancakeWhite from "assets/icons/pancake-white.svg";
 import { ModeProps } from "config/config";
 import { showcards } from "config/config.json";
 import Timer from "components/Timer";
+import Countdown, { CountdownTimeDelta } from "react-countdown";
 
 type GameProps = {
   mode: ModeProps;
   timeout: number;
+  onGameOver?: (isWinner: boolean, timeRemaining: number) => void;
 };
 
 type GridProps = {
@@ -40,13 +42,15 @@ function Cell({ sx, imagePath, item, onClick }: CellProps) {
   );
 }
 
-export default function Game({ mode, timeout }: GameProps) {
+export default function Game({ mode, timeout, onGameOver }: GameProps) {
   const [grid, setGrid] = useState<GridProps[]>([]);
-  const isWon = useRef<boolean>(false);
+  const isGameOver = useRef<boolean>(false);
   const currentCard = useRef<GridProps | null>(null);
   const previousCard = useRef<GridProps | null>(null);
   const previousTimeout = useRef<number>(-1);
   const wrongMoveTimeout = useRef<number>(-1);
+  const timerRef = useRef<Countdown | null>(null);
+  const currentTimeRef = useRef<number>(timeout);
   const { rows, cols } = mode;
 
   useEffect(() => {
@@ -73,18 +77,24 @@ export default function Game({ mode, timeout }: GameProps) {
     setGrid(shuffleArray<GridProps>(remappedCopy));
   }, []);
 
+  //Call game over if all card are paired
   useEffect(() => {
     if (grid.length === 0) return;
     const allPaired = grid.every((item) => item.isPaired === true);
     if (allPaired) {
-      isWon.current = true;
-      console.log("You Won!");
+      isGameOver.current = true;
+      timerRef?.current?.api?.pause();
+      onGameOver?.(true, currentTimeRef.current);
     }
   }, [grid]);
 
-  const gameOver = useCallback(() => {
-    if (isWon.current) return;
-    console.log("Game Over!");
+  const lose = useCallback(() => {
+    isGameOver.current = true;
+    onGameOver?.(false, currentTimeRef.current);
+  }, []);
+
+  const handleOnTick = useCallback((timeDelta: CountdownTimeDelta) => {
+    currentTimeRef.current = timeDelta.total;
   }, []);
 
   const revealCard = (id: number, isRevealed: boolean): GridProps | null => {
@@ -108,7 +118,7 @@ export default function Game({ mode, timeout }: GameProps) {
   };
 
   const itemClicked = (item: GridProps) => {
-    if (item.isPaired) return;
+    if (item.isPaired || isGameOver.current) return;
 
     if (currentCard.current && previousCard.current) {
       if (wrongMoveTimeout) clearTimeout(wrongMoveTimeout.current);
@@ -154,7 +164,12 @@ export default function Game({ mode, timeout }: GameProps) {
 
   return (
     <>
-      <Timer duration={timeout} onComplete={gameOver} />
+      <Timer
+        ref={timerRef}
+        duration={timeout}
+        onComplete={lose}
+        onTick={handleOnTick}
+      />
       <FlexCenter sx={{ mt: "1rem" }}>
         <Box
           sx={{
