@@ -1,16 +1,10 @@
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import {
-  AppBar,
-  Container,
-  Toolbar,
-  Button,
-  Paper,
-  Typography,
-} from "@mui/material";
+import { AppBar, Container, Toolbar, Paper } from "@mui/material";
 import { Home, Replay } from "@mui/icons-material";
 import Game from "./Game";
 import FlexSpaceBetween from "components/FlexSpaceBetween";
+import CustomButton from "components/CustomButton";
 import { useTheme } from "@mui/material";
 import FoodBg from "assets/foods-bg.jpg";
 import { modes } from "config/config.json";
@@ -22,6 +16,7 @@ type GameOverInfoProps = { isWinner: boolean; timeRemaining: number };
 
 export default function Gameplay() {
   const theme = useTheme();
+  const navigate = useNavigate();
   const [params] = useSearchParams();
   const modeName = params.get("mode");
   const mode = modes.find((mode) => mode.name === modeName);
@@ -52,32 +47,20 @@ export default function Gameplay() {
                 gap: theme.spacing(2),
               }}
             >
-              <Button
+              <CustomButton
                 startIcon={<Home color="secondary" />}
                 variant="contained"
-                sx={{
-                  bgcolor: "primary.light",
-                  color: "primary.main",
-                  borderRadius: "2rem",
-                  boxShadow: "0 4px 0 rgba(0, 0, 0, 0.25)",
-                  fontWeight: 700,
-                }}
+                onClick={() => navigate("/")}
               >
                 Main Menu
-              </Button>
-              <Button
+              </CustomButton>
+              <CustomButton
                 startIcon={<Replay color="secondary" />}
                 variant="contained"
-                sx={{
-                  bgcolor: "primary.light",
-                  color: "primary.main",
-                  borderRadius: "2rem",
-                  boxShadow: "0 4px 0 rgba(0, 0, 0, 0.25)",
-                  fontWeight: 700,
-                }}
+                onClick={() => location.reload()}
               >
                 Restart
-              </Button>
+              </CustomButton>
             </FlexSpaceBetween>
             <FlexSpaceBetween sx={{ gap: theme.spacing(7) }}>
               <StatusIndicator name={`High Score (${mode?.name})`} value="20" />
@@ -105,7 +88,7 @@ export default function Gameplay() {
           height: "100vh",
           backgroundImage: `url(${FoodBg})`,
           opacity: "0.1",
-          zIndex: -1,
+          zIndex: -2,
         }}
       ></Paper>
     </>

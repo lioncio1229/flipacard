@@ -1,4 +1,5 @@
 import { Box, Button, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import { Home, Replay } from "@mui/icons-material";
 import ReactConfetti from "react-confetti";
 import FlexCenter from "components/FlexCenter";
@@ -8,6 +9,8 @@ type GameOverProps = {
 };
 
 export default function GameOver({ isWinner }: GameOverProps) {
+  const navigate = useNavigate();
+
   return (
     <Box
       sx={{
@@ -50,6 +53,7 @@ export default function GameOver({ isWinner }: GameOverProps) {
               boxShadow: "0 4px 0 rgba(0, 0, 0, 0.25)",
               fontWeight: 700,
             }}
+            onClick={() => navigate('/')}
           >
             Main Menu
           </Button>
@@ -63,8 +67,9 @@ export default function GameOver({ isWinner }: GameOverProps) {
               boxShadow: "0 4px 0 rgba(0, 0, 0, 0.25)",
               fontWeight: 700,
             }}
+            onClick={() => location.reload()}
           >
-            Restart
+            Play Again
           </Button>
         </FlexCenter>
       </FlexCenter>
