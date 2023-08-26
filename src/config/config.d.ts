@@ -2,14 +2,14 @@ export type ModeProps = {
   name: string;
   rows: number;
   cols: number;
+  duration: number;
 };
 
 interface AppConfig {
   modes: ModeProps[];
   gameCardFlipspeed: number;
+  closeCardDuration: number;
   showcards: boolean;
-  showLogs: boolean;
-  duration: number;
 }
 
 declare module "config.json" {

@@ -7,7 +7,11 @@ import shuffleArray from "utils/shuffleArray";
 import Flipable from "components/Flipable";
 import PancakeWhite from "assets/icons/pancake-white.svg";
 import { ModeProps } from "config/config";
-import { showcards } from "config/config.json";
+import {
+  showcards,
+  gameCardFlipspeed,
+  closeCardDuration,
+} from "config/config.json";
 import Timer from "components/Timer";
 import Countdown, { CountdownTimeDelta } from "react-countdown";
 
@@ -40,7 +44,10 @@ function Cell({ sx, imagePath, item, onClick }: CellProps) {
       sx={{ width: "100%", height: "100%", cursor: "pointer", ...sx }}
       onClick={() => onClick(item)}
     >
-      <Avatar src={imagePath} sx={{ width: "55%", height: "auto" }} />
+      <Avatar
+        src={imagePath}
+        sx={{ width: "55%", height: "auto", pointerEvents: "none" }}
+      />
     </FlexCenter>
   );
 }
@@ -153,7 +160,7 @@ export default function Game({ mode, duration, onGameOver }: GameProps) {
           revealCard(previousId, false);
           previousCard.current = null;
           currentCard.current = null;
-        }, 350);
+        }, closeCardDuration);
       }
       return;
     }
@@ -162,18 +169,20 @@ export default function Game({ mode, duration, onGameOver }: GameProps) {
     previousTimeout.current = setTimeout(() => {
       revealCard(item.id, false);
       previousCard.current = null;
-    }, 700);
+    }, closeCardDuration);
   };
 
   return (
     <>
-      <Timer
-        ref={timerRef}
-        duration={duration}
-        onComplete={lose}
-        onTick={handleOnTick}
-      />
-      <FlexCenter sx={{ mt: "1rem" }}>
+      <Box mt="0.5rem">
+        <Timer
+          ref={timerRef}
+          duration={duration}
+          onComplete={lose}
+          onTick={handleOnTick}
+        />
+      </Box>
+      <FlexCenter sx={{ mt: "1rem", mb: "1rem" }}>
         <Box
           sx={{
             display: "grid",
@@ -187,7 +196,7 @@ export default function Game({ mode, duration, onGameOver }: GameProps) {
           {grid.map((item) => (
             <Paper key={item.id} elevation={3}>
               <Flipable
-                flipspeed={0.15}
+                flipspeed={gameCardFlipspeed}
                 width="100%"
                 height="100%"
                 flip={item.isRevealed}

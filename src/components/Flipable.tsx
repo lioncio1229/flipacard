@@ -25,14 +25,14 @@ const StyledBox = styled(Box)((props: { flipspeed: number }) => ({
   },
   "&.flip-enter-done": {
     transform: "rotateY(180deg)",
-    transition: `transform ${props.flipspeed}s linear`,
+    transition: `transform ${props.flipspeed}ms linear`,
   },
   "&.flip-exit-active": {
     transform: "rotateY(180deg)",
   },
   "&.flip-exit-done": {
     transform: "rotateY(0deg)",
-    transition: `transform ${props.flipspeed}s linear`,
+    transition: `transform ${props.flipspeed}ms linear`,
   },
 }));
 

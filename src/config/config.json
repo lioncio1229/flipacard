@@ -1,10 +1,11 @@
 {
   "modes": [
-    { "name": "Easy", "rows": 4, "cols": 4 },
-    { "name": "Medium", "rows": 4, "cols": 5 },
-    { "name": "Hard", "rows": 5, "cols": 6 }
+    { "name": "Easy", "rows": 4, "cols": 4, "duration": 60000 },
+    { "name": "Medium", "rows": 4, "cols": 5, "duration": 70000 },
+    { "name": "Hard", "rows": 5, "cols": 6, "duration": 120000 },
+    { "name": "Extreme", "rows": 5, "cols": 6, "duration": 70000 }
   ],
-  "gameCardFlipspeed": 0.15,
-  "showcards": false,
-  "duration": 60000
+  "gameCardFlipspeed": 120,
+  "closeCardDuration": 480,
+  "showcards": false
 }

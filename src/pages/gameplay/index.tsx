@@ -1,4 +1,3 @@
-import config from "../../config/config.json";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { AppBar, Container, Toolbar, Paper } from "@mui/material";
@@ -111,7 +110,7 @@ export default function Gameplay() {
         {mode && (
           <Game
             mode={mode}
-            duration={config.duration}
+            duration={mode.duration}
             onGameOver={handleGameOver}
           />
         )}
