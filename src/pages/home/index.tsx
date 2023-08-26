@@ -1,17 +1,14 @@
-import { Paper, Typography, useTheme } from "@mui/material";
-import { GitHub } from "@mui/icons-material";
-import FlexSpaceBetween from "components/FlexSpaceBetween";
+import { Paper, Typography, Container } from "@mui/material";
+
 import FoodBg from "assets/foods-bg.jpg";
 import FlipableMenu from "./FlipableMenu";
 import FlexCenter from "components/FlexCenter";
 import RandomIcons from "components/RandomIcons";
 
 export default function Home() {
-  const { spacing } = useTheme();
-
   return (
     <>
-      <FlexSpaceBetween sx={{ pt: spacing(2), pb: spacing(2) }}>
+      <Container maxWidth="xl">
         <Typography
           variant="h4"
           color="primary"
@@ -24,10 +21,9 @@ export default function Home() {
         >
           FlipaCard
         </Typography>
-        <GitHub color="primary" fontSize="large" />
-      </FlexSpaceBetween>
+      </Container>
       <RandomIcons />
-      <FlexCenter sx={{ mt: "3.5rem" }}>
+      <FlexCenter sx={{ height: "calc(100% - 140px)" }}>
         <FlipableMenu />
       </FlexCenter>
       <Paper
@@ -41,7 +37,7 @@ export default function Home() {
           height: "100vh",
           backgroundImage: `url(${FoodBg})`,
           opacity: "0.1",
-          zIndex: -1,
+          zIndex: -2,
         }}
       ></Paper>
     </>

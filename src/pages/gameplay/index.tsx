@@ -1,6 +1,6 @@
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { AppBar, Container, Toolbar, Paper } from "@mui/material";
+import { AppBar, Container, Toolbar, Paper, Typography } from "@mui/material";
 import { Home, Replay } from "@mui/icons-material";
 import Game from "./Game";
 import FlexSpaceBetween from "components/FlexSpaceBetween";
@@ -94,6 +94,14 @@ export default function Gameplay() {
                 Restart
               </CustomButton>
             </FlexSpaceBetween>
+            <Typography
+              variant="caption"
+              color="primary"
+              fontSize={16}
+              fontWeight={600}
+            >
+              {mode?.name}
+            </Typography>
             {highScore && (
               <StatusIndicator
                 name={`High Score (${mode?.name})`}

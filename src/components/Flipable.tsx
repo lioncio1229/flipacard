@@ -56,7 +56,7 @@ const Flipable = forwardRef<Ref, FlipableProps>(
       width = "8rem",
       height = "8rem",
       hideAt = 0,
-      flipspeed = 0.3,
+      flipspeed = 300,
     },
     ref
   ) => {
