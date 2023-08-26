@@ -6,6 +6,7 @@
     { "name": "Extreme", "rows": 5, "cols": 6, "duration": 70000 }
   ],
   "gameCardFlipspeed": 120,
-  "closeCardDuration": 480,
+  "closeCardDuration": 750,
+  "bothCardCloseDuration": 300,
   "showcards": false
 }

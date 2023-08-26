@@ -9,6 +9,7 @@ interface AppConfig {
   modes: ModeProps[];
   gameCardFlipspeed: number;
   closeCardDuration: number;
+  bothCardCloseDuration: number;
   showcards: boolean;
 }
 

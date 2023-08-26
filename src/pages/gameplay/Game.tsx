@@ -11,6 +11,7 @@ import {
   showcards,
   gameCardFlipspeed,
   closeCardDuration,
+  bothCardCloseDuration,
 } from "config/config.json";
 import Timer from "components/Timer";
 import Countdown, { CountdownTimeDelta } from "react-countdown";
@@ -160,7 +161,7 @@ export default function Game({ mode, duration, onGameOver }: GameProps) {
           revealCard(previousId, false);
           previousCard.current = null;
           currentCard.current = null;
-        }, closeCardDuration);
+        }, bothCardCloseDuration);
       }
       return;
     }

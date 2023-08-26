@@ -46,7 +46,7 @@ export default function Gameplay() {
       isWinner &&
       (!highScore || (highScore && total > highScore.timeRemaining))
     ) {
-      isNewHighscore = true;
+      if (highScore) isNewHighscore = true;
       const newHighScore: HighScore = {
         timeRemaining: total,
         timeRemainingFormatted: timeRemaining.toString(),
