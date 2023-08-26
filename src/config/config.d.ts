@@ -1,18 +1,18 @@
-
 export type ModeProps = {
-    name: string,
-    rows: number,
-    cols: number,
-}
+  name: string;
+  rows: number;
+  cols: number;
+};
 
 interface AppConfig {
-    modes: ModeProps[],
-    gameCardFlipspeed: number,
-    showcards: boolean,
-    showLogs: boolean,
+  modes: ModeProps[];
+  gameCardFlipspeed: number;
+  showcards: boolean;
+  showLogs: boolean;
+  duration: number;
 }
 
-declare module 'config.json' {
-    const value: AppConfig;
-    export default value;
+declare module "config.json" {
+  const value: AppConfig;
+  export default value;
 }

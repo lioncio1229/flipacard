@@ -3,12 +3,21 @@ import { useNavigate } from "react-router-dom";
 import { Home, Replay } from "@mui/icons-material";
 import ReactConfetti from "react-confetti";
 import FlexCenter from "components/FlexCenter";
+import StatusIndicator from "components/StatusIndicator";
 
-type GameOverProps = {
+export type GameOverInfo = {
   isWinner: boolean;
+  yourScore: string;
+  isNewHighscore: boolean;
 };
 
-export default function GameOver({ isWinner }: GameOverProps) {
+type GameOverProps = {
+  gameOverInfo: GameOverInfo;
+};
+
+export default function GameOver({
+  gameOverInfo: { isWinner, yourScore, isNewHighscore },
+}: GameOverProps) {
   const navigate = useNavigate();
 
   return (
@@ -23,7 +32,7 @@ export default function GameOver({ isWinner }: GameOverProps) {
         zIndex: 30,
       }}
     >
-      {isWinner && (
+      {isWinner && isNewHighscore && (
         <ReactConfetti
           style={{
             position: "fixed",
@@ -42,6 +51,12 @@ export default function GameOver({ isWinner }: GameOverProps) {
         >
           {isWinner ? "YOU WON!" : "YOU LOSE😂"}
         </Typography>
+        {isNewHighscore && (
+          <Typography color="success.light" fontSize={14} fontWeight={600}>
+            New High Score!
+          </Typography>
+        )}
+        {isWinner && <StatusIndicator name="Your Score" value={yourScore} />}
         <FlexCenter sx={{ gap: "1rem" }}>
           <Button
             startIcon={<Home color="secondary" />}
@@ -53,7 +68,7 @@ export default function GameOver({ isWinner }: GameOverProps) {
               boxShadow: "0 4px 0 rgba(0, 0, 0, 0.25)",
               fontWeight: 700,
             }}
-            onClick={() => navigate('/')}
+            onClick={() => navigate("/")}
           >
             Main Menu
           </Button>

@@ -1,3 +1,4 @@
+import config from "../../config/config.json";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { AppBar, Container, Toolbar, Paper } from "@mui/material";
@@ -10,9 +11,13 @@ import FoodBg from "assets/foods-bg.jpg";
 import { modes } from "config/config.json";
 import RandomIcons from "components/RandomIcons";
 import StatusIndicator from "components/StatusIndicator";
-import GameOver from "./GameOver";
+import GameOver, { GameOverInfo } from "./GameOver";
+import { CountdownTimeDelta, zeroPad } from "react-countdown";
 
-type GameOverInfoProps = { isWinner: boolean; timeRemaining: number };
+type HighScore = {
+  timeRemaining: number;
+  timeRemainingFormatted: string;
+};
 
 export default function Gameplay() {
   const theme = useTheme();
@@ -20,12 +25,40 @@ export default function Gameplay() {
   const [params] = useSearchParams();
   const modeName = params.get("mode");
   const mode = modes.find((mode) => mode.name === modeName);
-  const [gameOverInfo, setGameOverInfo] = useState<GameOverInfoProps | null>(
-    null
-  );
+  const [gameOverInfo, setGameOverInfo] = useState<GameOverInfo | null>(null);
 
-  const handleGameOver = (isWinner: boolean, timeRemaining: number) => {
-    setGameOverInfo({ isWinner, timeRemaining });
+  const highScoreStr: string | null = localStorage.getItem(`hs-${mode?.name}`);
+
+  let highScore: HighScore | null = null;
+  if (highScoreStr) {
+    highScore = JSON.parse(highScoreStr) as HighScore;
+  }
+
+  const handleGameOver = (
+    isWinner: boolean,
+    timeDelta: CountdownTimeDelta | null
+  ) => {
+    if (!timeDelta) return;
+    const { minutes, seconds, total } = timeDelta;
+    const timeRemaining = `${zeroPad(minutes, 2)}:${zeroPad(seconds, 2)}`;
+    let isNewHighscore = false;
+
+    if (
+      isWinner &&
+      (!highScore || (highScore && total > highScore.timeRemaining))
+    ) {
+      isNewHighscore = true;
+      const newHighScore: HighScore = {
+        timeRemaining: total,
+        timeRemainingFormatted: timeRemaining.toString(),
+      };
+      localStorage.setItem(`hs-${mode?.name}`, JSON.stringify(newHighScore));
+    }
+    setGameOverInfo({
+      isWinner,
+      isNewHighscore,
+      yourScore: timeRemaining,
+    });
   };
 
   return (
@@ -62,18 +95,25 @@ export default function Gameplay() {
                 Restart
               </CustomButton>
             </FlexSpaceBetween>
-            <FlexSpaceBetween sx={{ gap: theme.spacing(7) }}>
-              <StatusIndicator name={`High Score (${mode?.name})`} value="20" />
-            </FlexSpaceBetween>
+            {highScore && (
+              <StatusIndicator
+                name={`High Score (${mode?.name})`}
+                value={highScore.timeRemainingFormatted}
+              />
+            )}
           </Toolbar>
         </Container>
       </AppBar>
-      {gameOverInfo && <GameOver isWinner={gameOverInfo.isWinner} />}
+      {gameOverInfo && <GameOver gameOverInfo={gameOverInfo} />}
       {!gameOverInfo && <RandomIcons />}
 
       <Container maxWidth="xl">
         {mode && (
-          <Game mode={mode} timeout={60 * 1000} onGameOver={handleGameOver} />
+          <Game
+            mode={mode}
+            duration={config.duration}
+            onGameOver={handleGameOver}
+          />
         )}
       </Container>
 

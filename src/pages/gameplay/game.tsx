@@ -13,8 +13,11 @@ import Countdown, { CountdownTimeDelta } from "react-countdown";
 
 type GameProps = {
   mode: ModeProps;
-  timeout: number;
-  onGameOver?: (isWinner: boolean, timeRemaining: number) => void;
+  duration: number;
+  onGameOver?: (
+    isWinner: boolean,
+    timeDelta: CountdownTimeDelta | null
+  ) => void;
 };
 
 type GridProps = {
@@ -42,7 +45,7 @@ function Cell({ sx, imagePath, item, onClick }: CellProps) {
   );
 }
 
-export default function Game({ mode, timeout, onGameOver }: GameProps) {
+export default function Game({ mode, duration, onGameOver }: GameProps) {
   const [grid, setGrid] = useState<GridProps[]>([]);
   const isGameOver = useRef<boolean>(false);
   const currentCard = useRef<GridProps | null>(null);
@@ -50,7 +53,7 @@ export default function Game({ mode, timeout, onGameOver }: GameProps) {
   const previousTimeout = useRef<number>(-1);
   const wrongMoveTimeout = useRef<number>(-1);
   const timerRef = useRef<Countdown | null>(null);
-  const currentTimeRef = useRef<number>(timeout);
+  const currentTimeRef = useRef<CountdownTimeDelta | null>(null);
   const { rows, cols } = mode;
 
   useEffect(() => {
@@ -94,7 +97,7 @@ export default function Game({ mode, timeout, onGameOver }: GameProps) {
   }, []);
 
   const handleOnTick = useCallback((timeDelta: CountdownTimeDelta) => {
-    currentTimeRef.current = timeDelta.total;
+    currentTimeRef.current = timeDelta;
   }, []);
 
   const revealCard = (id: number, isRevealed: boolean): GridProps | null => {
@@ -166,7 +169,7 @@ export default function Game({ mode, timeout, onGameOver }: GameProps) {
     <>
       <Timer
         ref={timerRef}
-        duration={timeout}
+        duration={duration}
         onComplete={lose}
         onTick={handleOnTick}
       />
