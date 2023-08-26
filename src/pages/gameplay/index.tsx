@@ -12,6 +12,7 @@ import RandomIcons from "components/RandomIcons";
 import StatusIndicator from "components/StatusIndicator";
 import GameOver, { GameOverInfo } from "./GameOver";
 import { CountdownTimeDelta, zeroPad } from "react-countdown";
+import secureLocalStorage from "react-secure-storage";
 
 type HighScore = {
   timeRemaining: number;
@@ -26,12 +27,7 @@ export default function Gameplay() {
   const mode = modes.find((mode) => mode.name === modeName);
   const [gameOverInfo, setGameOverInfo] = useState<GameOverInfo | null>(null);
 
-  const highScoreStr: string | null = localStorage.getItem(`hs-${mode?.name}`);
-
-  let highScore: HighScore | null = null;
-  if (highScoreStr) {
-    highScore = JSON.parse(highScoreStr) as HighScore;
-  }
+  const highScore = secureLocalStorage.getItem(`hs-${mode?.name}`) as HighScore;
 
   const handleGameOver = (
     isWinner: boolean,
@@ -51,7 +47,7 @@ export default function Gameplay() {
         timeRemaining: total,
         timeRemainingFormatted: timeRemaining.toString(),
       };
-      localStorage.setItem(`hs-${mode?.name}`, JSON.stringify(newHighScore));
+      secureLocalStorage.setItem(`hs-${mode?.name}`, newHighScore);
     }
     setGameOverInfo({
       isWinner,
